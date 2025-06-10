@@ -3,7 +3,7 @@ import { createBrowserClient, createServerClient } from "./supabase"
 export interface Candidate {
   id: string
   name: string
-  city: "Astana" | "Almaty"
+  city: "Astana"
   position: string
   experience: number
   education: string
@@ -16,23 +16,18 @@ export interface Candidate {
 
 export interface Vote {
   id: string
-  city: "Astana" | "Almaty"
+  city: "Astana"
   candidate_id: string
   voter_session: string
   ip_address?: string
   created_at?: Date
 }
 
-export interface VotingStatus {
-  astana: boolean
-  almaty: boolean
-}
-
-// Get all candidates
+// Get all candidates (Astana only)
 export async function getCandidates(): Promise<Candidate[]> {
   const supabase = createBrowserClient()
 
-  const { data, error } = await supabase.from("candidates").select("*").order("name")
+  const { data, error } = await supabase.from("candidates").select("*").eq("city", "Astana").order("name")
 
   if (error) {
     console.error("Error fetching candidates:", error)
@@ -42,22 +37,8 @@ export async function getCandidates(): Promise<Candidate[]> {
   return data || []
 }
 
-// Get candidates by city
-export async function getCandidatesByCity(city: "Astana" | "Almaty"): Promise<Candidate[]> {
-  const supabase = createBrowserClient()
-
-  const { data, error } = await supabase.from("candidates").select("*").eq("city", city).order("name")
-
-  if (error) {
-    console.error(`Error fetching ${city} candidates:`, error)
-    throw new Error(`Failed to fetch ${city} candidates`)
-  }
-
-  return data || []
-}
-
 // Submit a vote
-export async function submitCityVote(city: "Astana" | "Almaty", candidateId: string): Promise<void> {
+export async function submitVote(candidateId: string): Promise<void> {
   const supabase = createBrowserClient()
 
   // Get or create voter session
@@ -70,7 +51,7 @@ export async function submitCityVote(city: "Astana" | "Almaty", candidateId: str
   // Submit vote
   const { error } = await supabase.from("votes").insert([
     {
-      city,
+      city: "Astana",
       candidate_id: candidateId,
       voter_session: voterSession,
     },
@@ -80,62 +61,54 @@ export async function submitCityVote(city: "Astana" | "Almaty", candidateId: str
     // Check if it's a duplicate vote error
     if (error.code === "23505") {
       // Unique constraint violation
-      throw new Error(`You have already voted for ${city}`)
+      throw new Error("You have already voted")
     }
     console.error("Error submitting vote:", error)
     throw new Error("Failed to submit vote")
   }
 
   // Update local voting status
-  const status = getVotingStatus()
-  status[city.toLowerCase() as keyof VotingStatus] = true
-  localStorage.setItem("votingStatus", JSON.stringify(status))
+  localStorage.setItem("hasVoted", "true")
 }
 
 // Get voting results
-export async function getVoteResults(): Promise<{ astana: Record<string, number>; almaty: Record<string, number> }> {
+export async function getVoteResults(): Promise<Record<string, number>> {
   const supabase = createBrowserClient()
 
-  const { data, error } = await supabase.from("votes").select("city, candidate_id")
+  const { data, error } = await supabase.from("votes").select("candidate_id").eq("city", "Astana")
 
   if (error) {
     console.error("Error fetching vote results:", error)
     throw new Error("Failed to fetch vote results")
   }
 
-  const astanaResults: Record<string, number> = {}
-  const almatyResults: Record<string, number> = {}
+  const results: Record<string, number> = {}
 
   data?.forEach((vote) => {
-    if (vote.city === "Astana") {
-      astanaResults[vote.candidate_id] = (astanaResults[vote.candidate_id] || 0) + 1
-    } else {
-      almatyResults[vote.candidate_id] = (almatyResults[vote.candidate_id] || 0) + 1
-    }
+    results[vote.candidate_id] = (results[vote.candidate_id] || 0) + 1
   })
 
-  return { astana: astanaResults, almaty: almatyResults }
+  return results
 }
 
 // Get voting status from local storage
-export function getVotingStatus(): VotingStatus {
+export function getVotingStatus(): boolean {
   if (typeof window === "undefined") {
-    return { astana: false, almaty: false }
+    return false
   }
 
   try {
-    const stored = localStorage.getItem("votingStatus")
-    return stored ? JSON.parse(stored) : { astana: false, almaty: false }
+    return localStorage.getItem("hasVoted") === "true"
   } catch {
-    return { astana: false, almaty: false }
+    return false
   }
 }
 
-// Check if user has already voted for a city
-export async function checkVoteStatus(city: "Astana" | "Almaty"): Promise<boolean> {
+// Check if user has already voted
+export async function checkVoteStatus(): Promise<boolean> {
   // First check local storage
   const localStatus = getVotingStatus()
-  if (localStatus[city.toLowerCase() as keyof VotingStatus]) {
+  if (localStatus) {
     return true
   }
 
@@ -151,7 +124,7 @@ export async function checkVoteStatus(city: "Astana" | "Almaty"): Promise<boolea
   const { data, error } = await supabase
     .from("votes")
     .select("id")
-    .eq("city", city)
+    .eq("city", "Astana")
     .eq("voter_session", voterSession)
     .limit(1)
 
@@ -164,9 +137,7 @@ export async function checkVoteStatus(city: "Astana" | "Almaty"): Promise<boolea
 
   // Update local storage if vote found in database
   if (hasVoted) {
-    const status = getVotingStatus()
-    status[city.toLowerCase() as keyof VotingStatus] = true
-    localStorage.setItem("votingStatus", JSON.stringify(status))
+    localStorage.setItem("hasVoted", "true")
   }
 
   return hasVoted
@@ -178,7 +149,10 @@ export async function checkVoteStatus(city: "Astana" | "Almaty"): Promise<boolea
 export async function addCandidate(candidate: Omit<Candidate, "id" | "created_at" | "updated_at">): Promise<Candidate> {
   const supabase = createServerClient()
 
-  const { data, error } = await supabase.from("candidates").insert([candidate]).select()
+  const { data, error } = await supabase
+    .from("candidates")
+    .insert([{ ...candidate, city: "Astana" }])
+    .select()
 
   if (error) {
     console.error("Error adding candidate:", error)

@@ -6,15 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { Loader2, Vote, MapPin, CheckCircle } from "lucide-react"
 import CandidateCard from "@/components/candidate-card"
-import { getCandidates, submitCityVote, getVotingStatus, checkVoteStatus, type Candidate } from "@/lib/voting-data"
+import { getCandidates, submitVote, getVotingStatus, checkVoteStatus, type Candidate } from "@/lib/voting-data"
 
 export default function VotingForm() {
   const [candidates, setCandidates] = useState<Candidate[]>([])
-  const [selectedAstana, setSelectedAstana] = useState<string>("")
-  const [selectedAlmaty, setSelectedAlmaty] = useState<string>("")
-  const [isSubmittingAstana, setIsSubmittingAstana] = useState(false)
-  const [isSubmittingAlmaty, setIsSubmittingAlmaty] = useState(false)
-  const [votingStatus, setVotingStatus] = useState({ astana: false, almaty: false })
+  const [selectedCandidate, setSelectedCandidate] = useState<string>("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [hasVoted, setHasVoted] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -28,17 +26,8 @@ export default function VotingForm() {
 
         // Check voting status
         const localStatus = getVotingStatus()
-
-        // Verify with database if needed
-        const [astanaVoted, almatyVoted] = await Promise.all([
-          localStatus.astana ? Promise.resolve(true) : checkVoteStatus("Astana"),
-          localStatus.almaty ? Promise.resolve(true) : checkVoteStatus("Almaty"),
-        ])
-
-        setVotingStatus({
-          astana: astanaVoted,
-          almaty: almatyVoted,
-        })
+        const voted = localStatus || (await checkVoteStatus())
+        setHasVoted(voted)
       } catch (error) {
         console.error("Error loading data:", error)
         toast({
@@ -54,27 +43,24 @@ export default function VotingForm() {
     loadData()
   }, [])
 
-  const astanaCandidates = candidates.filter((c) => c.city === "Astana")
-  const almatyCandidates = candidates.filter((c) => c.city === "Almaty")
-
-  const handleAstanaSubmit = async () => {
-    if (!selectedAstana) {
+  const handleSubmit = async () => {
+    if (!selectedCandidate) {
       toast({
         title: "No candidate selected",
-        description: "Please select a candidate from Astana.",
+        description: "Please select a candidate before submitting your vote.",
         variant: "destructive",
       })
       return
     }
 
-    setIsSubmittingAstana(true)
+    setIsSubmitting(true)
 
     try {
-      await submitCityVote("Astana", selectedAstana)
-      setVotingStatus((prev) => ({ ...prev, astana: true }))
+      await submitVote(selectedCandidate)
+      setHasVoted(true)
 
       toast({
-        title: "Astana vote submitted!",
+        title: "Vote submitted successfully!",
         description: "Your vote for Astana trustee leader has been recorded.",
       })
     } catch (error: any) {
@@ -84,38 +70,7 @@ export default function VotingForm() {
         variant: "destructive",
       })
     } finally {
-      setIsSubmittingAstana(false)
-    }
-  }
-
-  const handleAlmatySubmit = async () => {
-    if (!selectedAlmaty) {
-      toast({
-        title: "No candidate selected",
-        description: "Please select a candidate from Almaty.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsSubmittingAlmaty(true)
-
-    try {
-      await submitCityVote("Almaty", selectedAlmaty)
-      setVotingStatus((prev) => ({ ...prev, almaty: true }))
-
-      toast({
-        title: "Almaty vote submitted!",
-        description: "Your vote for Almaty trustee leader has been recorded.",
-      })
-    } catch (error: any) {
-      toast({
-        title: "Error submitting vote",
-        description: error.message || "Please try again later.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmittingAlmaty(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -130,48 +85,46 @@ export default function VotingForm() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Astana Section */}
-      <Card className={votingStatus.astana ? "opacity-75" : ""}>
+      <Card className={hasVoted ? "opacity-75" : ""}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MapPin className="h-6 w-6 text-blue-600" />
-              <CardTitle className="text-2xl">Astana Trustee Leader</CardTitle>
-              {votingStatus.astana && <CheckCircle className="h-6 w-6 text-green-600" />}
+              <CardTitle className="text-2xl">Astana Trustee Leader Candidates</CardTitle>
+              {hasVoted && <CheckCircle className="h-6 w-6 text-green-600" />}
             </div>
-            {votingStatus.astana && <span className="text-green-600 font-semibold">Vote Submitted</span>}
+            {hasVoted && <span className="text-green-600 font-semibold">Vote Submitted</span>}
           </div>
           <p className="text-gray-600">
-            {votingStatus.astana
-              ? "You have already voted for Astana trustee leader"
-              : "Select one candidate to represent Astana"}
+            {hasVoted ? "You have already voted for Astana trustee leader" : "Select one candidate to represent Astana"}
           </p>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap justify-center gap-6 mb-6">
-            {astanaCandidates.map((candidate) => (
+            {candidates.map((candidate) => (
               <CandidateCard
                 key={candidate.id}
                 candidate={candidate}
-                isSelected={selectedAstana === candidate.id}
-                onSelect={() => !votingStatus.astana && setSelectedAstana(candidate.id)}
-                disabled={votingStatus.astana}
+                isSelected={selectedCandidate === candidate.id}
+                onSelect={() => !hasVoted && setSelectedCandidate(candidate.id)}
+                disabled={hasVoted}
               />
             ))}
           </div>
 
           <div className="text-center">
             <Button
-              onClick={handleAstanaSubmit}
-              disabled={isSubmittingAstana || !selectedAstana || votingStatus.astana}
+              onClick={handleSubmit}
+              disabled={isSubmitting || !selectedCandidate || hasVoted}
               size="lg"
               className="px-8 py-3"
             >
-              {isSubmittingAstana ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Submitting...
                 </>
-              ) : votingStatus.astana ? (
+              ) : hasVoted ? (
                 <>
                   <CheckCircle className="mr-2 h-5 w-5" />
                   Vote Submitted
@@ -179,7 +132,7 @@ export default function VotingForm() {
               ) : (
                 <>
                   <Vote className="mr-2 h-5 w-5" />
-                  Submit Astana Vote
+                  Submit Vote
                 </>
               )}
             </Button>
@@ -187,76 +140,14 @@ export default function VotingForm() {
         </CardContent>
       </Card>
 
-      {/* Almaty Section */}
-      <Card className={votingStatus.almaty ? "opacity-75" : ""}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-6 w-6 text-green-600" />
-              <CardTitle className="text-2xl">Almaty Trustee Leader</CardTitle>
-              {votingStatus.almaty && <CheckCircle className="h-6 w-6 text-green-600" />}
-            </div>
-            {votingStatus.almaty && <span className="text-green-600 font-semibold">Vote Submitted</span>}
-          </div>
-          <p className="text-gray-600">
-            {votingStatus.almaty
-              ? "You have already voted for Almaty trustee leader"
-              : "Select one candidate to represent Almaty"}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap justify-center gap-6 mb-6">
-            {almatyCandidates.map((candidate) => (
-              <CandidateCard
-                key={candidate.id}
-                candidate={candidate}
-                isSelected={selectedAlmaty === candidate.id}
-                onSelect={() => !votingStatus.almaty && setSelectedAlmaty(candidate.id)}
-                disabled={votingStatus.almaty}
-              />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Button
-              onClick={handleAlmatySubmit}
-              disabled={isSubmittingAlmaty || !selectedAlmaty || votingStatus.almaty}
-              size="lg"
-              className="px-8 py-3"
-            >
-              {isSubmittingAlmaty ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Submitting...
-                </>
-              ) : votingStatus.almaty ? (
-                <>
-                  <CheckCircle className="mr-2 h-5 w-5" />
-                  Vote Submitted
-                </>
-              ) : (
-                <>
-                  <Vote className="mr-2 h-5 w-5" />
-                  Submit Almaty Vote
-                </>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Overall Status */}
-      {(votingStatus.astana || votingStatus.almaty) && (
+      {/* Status Message */}
+      {hasVoted && (
         <Card className="bg-green-50 border-green-200">
           <CardContent className="text-center py-6">
             <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-600" />
             <h3 className="text-lg font-semibold mb-2">Thank you for participating!</h3>
             <p className="text-gray-600">
-              {votingStatus.astana && votingStatus.almaty
-                ? "You have voted for both cities. Results will be announced after the voting period ends."
-                : votingStatus.astana
-                  ? "You have voted for Astana. You can still vote for Almaty if you wish."
-                  : "You have voted for Almaty. You can still vote for Astana if you wish."}
+              Your vote has been recorded. Results will be announced after the voting period ends.
             </p>
           </CardContent>
         </Card>
