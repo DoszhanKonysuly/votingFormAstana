@@ -48,26 +48,26 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-6 text-gray-900">Admin Dashboard</h1>
-          <p className="text-xl text-gray-600 mb-8">Manage Astana Trustee Leader Election</p>
+          <h1 className="text-5xl font-bold mb-6 text-gray-900">Панель администратора</h1>
+          <p className="text-xl text-gray-600 mb-8">Управление выборами лидера попечителей Астаны</p>
 
           <div className="flex justify-center gap-4">
             <Link href="/">
               <Button variant="outline" className="px-6 py-3">
                 <ArrowLeft className="mr-2 h-5 w-5" />
-                Back to Voting
+                Назад к голосованию
               </Button>
             </Link>
             <Link href="/admin/add-candidate">
               <Button className="px-6 py-3">
                 <UserPlus className="mr-2 h-5 w-5" />
-                Add Candidate
+                Добавить кандидата
               </Button>
             </Link>
             <Link href="/results">
               <Button variant="outline" className="px-6 py-3">
                 <BarChart3 className="mr-2 h-5 w-5" />
-                View Results
+                Посмотреть результаты
               </Button>
             </Link>
           </div>
@@ -78,13 +78,13 @@ export default function AdminPage() {
           <Card className="text-center shadow-lg">
             <CardContent className="py-8">
               <div className="text-3xl font-bold text-blue-600 mb-2">{candidates.length}</div>
-              <div className="text-gray-600">Total Candidates</div>
+              <div className="text-gray-600">Всего кандидатов</div>
             </CardContent>
           </Card>
           <Card className="text-center shadow-lg">
             <CardContent className="py-8">
               <div className="text-3xl font-bold text-green-600 mb-2">{totalVotes}</div>
-              <div className="text-gray-600">Total Votes</div>
+              <div className="text-gray-600">Всего голосов</div>
             </CardContent>
           </Card>
           <Card className="text-center shadow-lg">
@@ -92,7 +92,7 @@ export default function AdminPage() {
               <div className="text-3xl font-bold text-purple-600 mb-2">
                 {totalVotes > 0 ? Math.round(totalVotes / candidates.length) : 0}
               </div>
-              <div className="text-gray-600">Avg Votes/Candidate</div>
+              <div className="text-gray-600">Среднее голосов/кандидат</div>
             </CardContent>
           </Card>
         </div>
@@ -130,10 +130,10 @@ function CandidateAdminCard({ candidate, voteCount, totalVotes }: CandidateAdmin
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start mb-2">
           <CardTitle className="text-lg font-bold">{candidate.name}</CardTitle>
-          <div className="bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full">{voteCount} votes</div>
+          <div className="bg-blue-100 text-blue-800 text-sm font-bold px-3 py-1 rounded-full">{voteCount} голосов</div>
         </div>
         <p className="text-sm text-gray-500">{candidate.position}</p>
-        <div className="text-xs text-gray-400">{percentage}% of total votes</div>
+        <div className="text-xs text-gray-400">{percentage}% от общего числа голосов</div>
       </CardHeader>
 
       <CardContent className="flex flex-col h-full">
@@ -145,10 +145,10 @@ function CandidateAdminCard({ candidate, voteCount, totalVotes }: CandidateAdmin
           />
           <div className="ml-4 flex-1">
             <p className="text-sm mb-2">
-              <strong>Experience:</strong> {candidate.experience} years
+              <strong>Опыт:</strong> {candidate.experience} лет
             </p>
             <p className="text-sm">
-              <strong>Education:</strong> {candidate.education}
+              <strong>Образование:</strong> {candidate.education}
             </p>
           </div>
         </div>
@@ -166,12 +166,12 @@ function CandidateAdminCard({ candidate, voteCount, totalVotes }: CandidateAdmin
         <div className="flex justify-center gap-3 mt-auto">
           <Link href={`/admin/edit-candidate/${candidate.id}`}>
             <Button variant="outline" size="sm" className="px-4">
-              Edit
+              Редактировать
             </Button>
           </Link>
           <Link href={`/admin/delete-candidate/${candidate.id}`}>
             <Button variant="destructive" size="sm" className="px-4">
-              Delete
+              Удалить
             </Button>
           </Link>
         </div>

@@ -54,13 +54,13 @@ export default function ResultsPage() {
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-6 text-gray-900">Election Results</h1>
-          <p className="text-xl text-gray-600 mb-8">Live results for the Astana Trustee Leader Election 2024</p>
+          <h1 className="text-5xl font-bold mb-6 text-gray-900">Результаты выборов</h1>
+          <p className="text-xl text-gray-600 mb-8">Текущие результаты выборов лидера попечителей Астаны 2024</p>
           <div className="flex justify-center">
             <Link href="/">
               <Button variant="outline" className="px-6 py-3">
                 <ArrowLeft className="mr-2 h-5 w-5" />
-                Back to Voting
+                Назад к голосованию
               </Button>
             </Link>
           </div>
@@ -72,9 +72,9 @@ export default function ResultsPage() {
             <CardHeader className="text-center py-8">
               <CardTitle className="flex items-center gap-3 justify-center text-3xl">
                 <BarChart3 className="h-8 w-8 text-blue-600" />
-                Astana Results
+                Результаты Астаны
               </CardTitle>
-              <p className="text-lg text-gray-600 mt-4">Total Votes: {totalVotes}</p>
+              <p className="text-lg text-gray-600 mt-4">Всего голосов: {totalVotes}</p>
             </CardHeader>
 
             <CardContent className="px-8 pb-8">
@@ -83,13 +83,13 @@ export default function ResultsPage() {
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl mb-8 border border-blue-200">
                   <div className="flex items-center gap-3 mb-4 justify-center">
                     <Trophy className="h-8 w-8 text-yellow-500" />
-                    <span className="text-2xl font-bold text-blue-800">Leading Candidate</span>
+                    <span className="text-2xl font-bold text-blue-800">Лидирующий кандидат</span>
                   </div>
                   <div className="text-center">
                     <div className="font-bold text-3xl text-blue-900 mb-2">{getCandidateById(winner[0])?.name}</div>
                     <div className="text-lg text-blue-700 mb-2">{getCandidateById(winner[0])?.position}</div>
                     <div className="text-xl font-semibold text-blue-800">
-                      {winner[1]} votes ({totalVotes > 0 ? Math.round((winner[1] / totalVotes) * 100) : 0}%)
+                      {winner[1]} голосов ({totalVotes > 0 ? Math.round((winner[1] / totalVotes) * 100) : 0}%)
                     </div>
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export default function ResultsPage() {
                           </div>
                           <div className="text-right">
                             <Badge variant="secondary" className="text-lg px-4 py-2 mb-1">
-                              {votes} votes
+                              {votes} голосов
                             </Badge>
                             <div className="text-sm text-gray-600">{percentage}%</div>
                           </div>
@@ -139,7 +139,7 @@ export default function ResultsPage() {
                 {Object.keys(results).length === 0 && (
                   <div className="text-center py-12 text-gray-500">
                     <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-xl">No votes recorded yet</p>
+                    <p className="text-xl">Голосов пока нет</p>
                   </div>
                 )}
               </div>

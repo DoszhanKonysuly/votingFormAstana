@@ -48,7 +48,7 @@ export default function CandidateCard({ candidate, isSelected, onSelect, disable
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4 flex-shrink-0" />
-              <span>{candidate.experience} years experience</span>
+              <span>{candidate.experience} лет опыта</span>
             </div>
 
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
@@ -79,7 +79,7 @@ export default function CandidateCard({ candidate, isSelected, onSelect, disable
             className="w-full mt-4 py-3 font-semibold"
             disabled={disabled}
           >
-            {disabled ? "Voting Closed" : isSelected ? "Selected" : "Select Candidate"}
+            {disabled ? "Голосование закрыто" : isSelected ? "Выбрано" : "Выбрать кандидата"}
           </Button>
         </div>
       </CardContent>

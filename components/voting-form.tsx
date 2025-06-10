@@ -31,8 +31,8 @@ export default function VotingForm() {
       } catch (error) {
         console.error("Error loading data:", error)
         toast({
-          title: "Error loading data",
-          description: "Please refresh the page to try again.",
+          title: "Ошибка загрузки данных",
+          description: "Пожалуйста, обновите страницу и попробуйте снова.",
           variant: "destructive",
         })
       } finally {
@@ -46,8 +46,8 @@ export default function VotingForm() {
   const handleSubmit = async () => {
     if (!selectedCandidate) {
       toast({
-        title: "No candidate selected",
-        description: "Please select a candidate before submitting your vote.",
+        title: "Кандидат не выбран",
+        description: "Пожалуйста, выберите кандидата перед отправкой голоса.",
         variant: "destructive",
       })
       return
@@ -60,13 +60,13 @@ export default function VotingForm() {
       setHasVoted(true)
 
       toast({
-        title: "Vote submitted successfully!",
-        description: "Your vote for Astana trustee leader has been recorded.",
+        title: "Голос успешно отправлен!",
+        description: "Ваш голос за лидера попечителей Астаны записан.",
       })
     } catch (error: any) {
       toast({
-        title: "Error submitting vote",
-        description: error.message || "Please try again later.",
+        title: "Ошибка отправки голоса",
+        description: error.message || "Пожалуйста, попробуйте позже.",
         variant: "destructive",
       })
     } finally {
@@ -89,17 +89,19 @@ export default function VotingForm() {
         <CardHeader className="text-center py-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <MapPin className="h-8 w-8 text-blue-600" />
-            <CardTitle className="text-3xl font-bold">Astana Trustee Leader Candidates</CardTitle>
+            <CardTitle className="text-3xl font-bold">Кандидаты в лидеры попечителей Астаны</CardTitle>
             {hasVoted && <CheckCircle className="h-8 w-8 text-green-600" />}
           </div>
           {hasVoted && (
             <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">
               <CheckCircle className="h-5 w-5" />
-              Vote Submitted
+              Голос отправлен
             </div>
           )}
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-            {hasVoted ? "You have already voted for Astana trustee leader" : "Select one candidate to represent Astana"}
+            {hasVoted
+              ? "Вы уже проголосовали за лидера попечителей Астаны"
+              : "Выберите одного кандидата для представления Астаны"}
           </p>
         </CardHeader>
 
@@ -131,17 +133,17 @@ export default function VotingForm() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                  Submitting...
+                  Отправка...
                 </>
               ) : hasVoted ? (
                 <>
                   <CheckCircle className="mr-3 h-6 w-6" />
-                  Vote Submitted
+                  Голос отправлен
                 </>
               ) : (
                 <>
                   <Vote className="mr-3 h-6 w-6" />
-                  Submit Vote
+                  Отправить голос
                 </>
               )}
             </Button>
@@ -154,9 +156,9 @@ export default function VotingForm() {
         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
           <CardContent className="text-center py-12">
             <CheckCircle className="h-16 w-16 mx-auto mb-6 text-green-600" />
-            <h3 className="text-2xl font-bold mb-4 text-green-800">Thank you for participating!</h3>
+            <h3 className="text-2xl font-bold mb-4 text-green-800">Спасибо за участие!</h3>
             <p className="text-lg text-green-700 max-w-2xl mx-auto">
-              Your vote has been recorded. Results will be announced after the voting period ends.
+              Ваш голос записан. Результаты будут объявлены после окончания периода голосования.
             </p>
           </CardContent>
         </Card>
