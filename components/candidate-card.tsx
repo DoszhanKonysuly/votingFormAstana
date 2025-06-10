@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar, Award, CheckCircle } from "lucide-react"
+import { getYearsText } from "@/lib/utils"
 import type { Candidate } from "@/lib/voting-data"
 
 interface CandidateCardProps {
@@ -48,7 +49,7 @@ export default function CandidateCard({ candidate, isSelected, onSelect, disable
           <div className="space-y-3">
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4 flex-shrink-0" />
-              <span>{candidate.experience} лет опыта</span>
+              <span>{getYearsText(candidate.experience)} опыта</span>
             </div>
 
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600">

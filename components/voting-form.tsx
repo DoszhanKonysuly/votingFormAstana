@@ -106,10 +106,10 @@ export default function VotingForm() {
         </CardHeader>
 
         <CardContent className="px-8 pb-8">
-          {/* Candidates Grid - Perfectly Centered */}
+          {/* Candidates Grid - Cards Centered, Content Normal */}
           <div className="mb-12">
             <div className="flex justify-center">
-              <div className="inline-flex flex-wrap justify-center gap-8 max-w-6xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-6xl">
                 {candidates.map((candidate) => (
                   <CandidateCard
                     key={candidate.id}

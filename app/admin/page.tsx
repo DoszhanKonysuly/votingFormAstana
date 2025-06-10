@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Loader2, BarChart3, UserPlus, ArrowLeft } from "lucide-react"
 import { getCandidates, getVoteResults, type Candidate } from "@/lib/voting-data"
+import { getYearsText } from "@/lib/utils"
 import Link from "next/link"
 
 export default function AdminPage() {
@@ -99,15 +100,14 @@ export default function AdminPage() {
 
         {/* Candidates Grid */}
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center max-w-6xl">
             {candidates.map((candidate) => (
-              <div key={candidate.id} className="flex justify-center">
-                <CandidateAdminCard
-                  candidate={candidate}
-                  voteCount={getCandidateVotes(candidate.id)}
-                  totalVotes={totalVotes}
-                />
-              </div>
+              <CandidateAdminCard
+                key={candidate.id}
+                candidate={candidate}
+                voteCount={getCandidateVotes(candidate.id)}
+                totalVotes={totalVotes}
+              />
             ))}
           </div>
         </div>
@@ -145,7 +145,7 @@ function CandidateAdminCard({ candidate, voteCount, totalVotes }: CandidateAdmin
           />
           <div className="ml-4 flex-1">
             <p className="text-sm mb-2">
-              <strong>Опыт:</strong> {candidate.experience} лет
+              <strong>Опыт:</strong> {getYearsText(candidate.experience)}
             </p>
             <p className="text-sm">
               <strong>Образование:</strong> {candidate.education}
