@@ -49,14 +49,19 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-6 text-gray-900">Панель администратора</h1>
-          <p className="text-xl text-gray-600 mb-8">Управление выборами лидера попечителей Астаны</p>
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <img src="/images/iqclub-logo.png" alt="IQClub Logo" className="h-16 md:h-20 w-auto" />
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Панель администратора</h1>
+          <p className="text-xl text-gray-600 mb-8">Управление выборами Председателя IQClub Астана</p>
 
           <div className="flex justify-center gap-4">
             <Link href="/">
               <Button variant="outline" className="px-6 py-3">
                 <ArrowLeft className="mr-2 h-5 w-5" />
-                Назад к голосованию
+                Вернуться к голосованию
               </Button>
             </Link>
             <Link href="/admin/add-candidate">

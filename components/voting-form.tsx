@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
-import { Loader2, Vote, MapPin, CheckCircle } from "lucide-react"
+import { Loader2, Vote, Users, CheckCircle } from "lucide-react"
 import CandidateCard from "@/components/candidate-card"
 import { getCandidates, submitVote, getVotingStatus, checkVoteStatus, type Candidate } from "@/lib/voting-data"
 
@@ -61,7 +61,7 @@ export default function VotingForm() {
 
       toast({
         title: "Голос успешно отправлен!",
-        description: "Ваш голос за лидера попечителей Астаны записан.",
+        description: "Ваш голос за Председателя IQClub Астана записан.",
       })
     } catch (error: any) {
       toast({
@@ -88,8 +88,8 @@ export default function VotingForm() {
       <Card className={`${hasVoted ? "opacity-75" : ""} shadow-lg border-0`}>
         <CardHeader className="text-center py-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <MapPin className="h-8 w-8 text-blue-600" />
-            <CardTitle className="text-3xl font-bold">Кандидаты в лидеры попечителей Астаны</CardTitle>
+            <Users className="h-8 w-8 text-blue-600" />
+            <CardTitle className="text-3xl font-bold">Кандидаты на пост Председателя</CardTitle>
             {hasVoted && <CheckCircle className="h-8 w-8 text-green-600" />}
           </div>
           {hasVoted && (
@@ -100,8 +100,8 @@ export default function VotingForm() {
           )}
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
             {hasVoted
-              ? "Вы уже проголосовали за лидера попечителей Астаны"
-              : "Выберите одного кандидата для представления Астаны"}
+              ? "Вы уже проголосовали за Председателя IQClub Астана"
+              : "Выберите одного кандидата для руководства IQClub Астана"}
           </p>
         </CardHeader>
 
@@ -132,7 +132,7 @@ export default function VotingForm() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                  Отправка...
+                  Отправка голоса...
                 </>
               ) : hasVoted ? (
                 <>
@@ -142,7 +142,7 @@ export default function VotingForm() {
               ) : (
                 <>
                   <Vote className="mr-3 h-6 w-6" />
-                  Отправить голос
+                  Проголосовать
                 </>
               )}
             </Button>
@@ -155,7 +155,7 @@ export default function VotingForm() {
         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
           <CardContent className="text-center py-12">
             <CheckCircle className="h-16 w-16 mx-auto mb-6 text-green-600" />
-            <h3 className="text-2xl font-bold mb-4 text-green-800">Спасибо за участие!</h3>
+            <h3 className="text-2xl font-bold mb-4 text-green-800">Спасибо за участие в голосовании!</h3>
             <p className="text-lg text-green-700 max-w-2xl mx-auto">
               Ваш голос записан. Результаты будут объявлены после окончания периода голосования.
             </p>

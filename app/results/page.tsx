@@ -54,13 +54,18 @@ export default function ResultsPage() {
       <div className="container mx-auto px-4 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-6 text-gray-900">Результаты выборов</h1>
-          <p className="text-xl text-gray-600 mb-8">Текущие результаты выборов лидера попечителей Астаны 2024</p>
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <img src="/images/iqclub-logo.png" alt="IQClub Logo" className="h-16 md:h-20 w-auto" />
+          </div>
+
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Результаты голосования</h1>
+          <p className="text-xl text-gray-600 mb-8">Результаты выборов Председателя IQClub Астана 2025-2026</p>
           <div className="flex justify-center">
             <Link href="/">
               <Button variant="outline" className="px-6 py-3">
                 <ArrowLeft className="mr-2 h-5 w-5" />
-                Назад к голосованию
+                Вернуться к голосованию
               </Button>
             </Link>
           </div>
@@ -72,7 +77,7 @@ export default function ResultsPage() {
             <CardHeader className="text-center py-8">
               <CardTitle className="flex items-center gap-3 justify-center text-3xl">
                 <BarChart3 className="h-8 w-8 text-blue-600" />
-                Результаты Астаны
+                Результаты голосования
               </CardTitle>
               <p className="text-lg text-gray-600 mt-4">Всего голосов: {totalVotes}</p>
             </CardHeader>
