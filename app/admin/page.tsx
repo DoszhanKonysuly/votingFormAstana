@@ -54,7 +54,8 @@ export default function AdminPage() {
             <img src="/images/iqclub-logo.png" alt="IQClub Logo" className="h-16 md:h-20 w-auto" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Панель администратора</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Әкімші панелі</h1>
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-gray-700">Панель администратора</h2>
           <p className="text-xl text-gray-600 mb-8">Управление выборами Председателя IQClub Астана</p>
 
           <div className="flex justify-center gap-4">

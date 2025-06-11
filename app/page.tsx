@@ -11,10 +11,10 @@ export default function VotingPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Голосование за Председателя IQClub Астана 2025-2026
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-700 mb-6">
             2025-2026 IQClub Астана Төрағасына дауыс беру
+          </h1>
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-700 mb-6">
+            Голосование за Председателя IQClub Астана 2025-2026
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Ваш голос — вклад в развитие комьюнити IQClub.

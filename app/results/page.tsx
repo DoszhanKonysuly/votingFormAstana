@@ -59,7 +59,8 @@ export default function ResultsPage() {
             <img src="/images/iqclub-logo.png" alt="IQClub Logo" className="h-16 md:h-20 w-auto" />
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Результаты голосования</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Дауыс беру нәтижелері</h1>
+          <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-gray-700">Результаты голосования</h2>
           <p className="text-xl text-gray-600 mb-8">Результаты выборов Председателя IQClub Астана 2025-2026</p>
           <div className="flex justify-center">
             <Link href="/">
